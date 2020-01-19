@@ -33,10 +33,10 @@ public class Ballshooter extends Subsystem {
   public void shoot() {
     if(OI.getXButton()) {
       shooterMotor.set(ControlMode.PercentOutput, 0.75);
-      Robot.intake.enableBelt();
+     // Robot.intake.enableBelt();
     } else {
       shooterMotor.set(ControlMode.PercentOutput, 0.0);
-      Robot.intake.disableBelt();
+    //  Robot.intake.disableBelt();
     }
   }
 
