@@ -25,8 +25,8 @@ public class Robot extends TimedRobot {
 
   public static AHRS navX;
 
-  public static Encoder leftEncoder = new Encoder(0, 1, false , EncodingType.k4X);
-  public static Encoder rightEncoder = new Encoder(2,3,false, EncodingType.k4X);
+  public static Encoder leftEncoder;
+  public static Encoder rightEncoder;
   public static PIDController testpid = new PIDController(0,0,0);
   public static ShuffleboardTab autoTab;
   public static NetworkTableEntry pidA;
@@ -38,12 +38,14 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     navX = new AHRS(I2C.Port.kMXP);
 
+    leftEncoder = new Encoder(0, 1, false , EncodingType.k4X);
     leftEncoder.setDistancePerPulse(60 / 8192);
     leftEncoder.setMaxPeriod(0.1);
     leftEncoder.setMinRate(10);
     leftEncoder.setSamplesToAverage(7);
     leftEncoder.setReverseDirection(true);
    
+    rightEncoder = new Encoder(2,3,false, EncodingType.k4X);
     rightEncoder.setDistancePerPulse(60 / 8192);
     rightEncoder.setMaxPeriod(0.1);
     rightEncoder.setMinRate(10);
