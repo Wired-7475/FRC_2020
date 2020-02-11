@@ -1,0 +1,17 @@
+Right click in the frc code file, and select git bash here.
+
+To upload:
+	1: git add .
+this adds all altered files to git
+
+	2: git commit -m "message"
+this commits the altered code, where the tag is whatever is replaced with message. Make sure this is related to the changes made
+as this makes it easier to track versions
+
+	3: git push origin master
+this pushes the code to github. Make sure you are connected to the internet
+
+To download:
+
+	1: git pull orgin master
+this pulls the code from the repository to the computer. Ensure you are connected to the internet
