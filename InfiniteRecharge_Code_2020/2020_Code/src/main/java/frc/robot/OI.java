@@ -7,8 +7,9 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 public class OI {
 
 static Joystick joy = new Joystick(RobotMap.JOYSTICK);
-static XboxController xbox = new XboxController(RobotMap.XBOX);
-static double deadzone = 0.05;
+public static XboxController xbox = new XboxController(RobotMap.XBOX);
+public static XboxController drive = new XboxController(RobotMap.DRIVE_CONTROLLER);
+public static double deadzone = 0.1;
 
     public static double getJoyX() {
         return Math.abs(joy.getX()) < deadzone ? 0.0 : joy.getX();

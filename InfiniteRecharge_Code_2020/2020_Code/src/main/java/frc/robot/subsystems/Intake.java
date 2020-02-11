@@ -47,9 +47,11 @@ public class Intake extends Subsystem {
     }
 
   public void enableBelt() {
-    beltMotor.set(ControlMode.PercentOutput, -0.3);
-    System.out.println("Enabled");
+    beltMotor.set(ControlMode.PercentOutput, -0.5);
+  }
 
+  public void reverseBelt() {
+    beltMotor.set(ControlMode.PercentOutput, 0.5);
   }
 
   public void disableBelt() {
@@ -58,24 +60,23 @@ public class Intake extends Subsystem {
 
   public void ballIntake() {
     if(OI.getBButton()) {
-    intakeMotor.set(ControlMode.PercentOutput, 0.4);
-    //enableBelt();
+      intakeMotor.set(ControlMode.PercentOutput, 0.4);
     } else {
-    intakeMotor.set(ControlMode.PercentOutput, 0.0);
-    //disableBelt();
+      intakeMotor.set(ControlMode.PercentOutput, 0.0);
     }
+
+    if(OI.getBumper(Hand.kLeft))
+      reverseBelt();
+    else if(OI.getBumper(Hand.kRight))
+      enableBelt();
+    else
+      disableBelt();    
 
     if(Math.abs(OI.getY(Hand.kLeft)) >= 0.1)
       wristMotor.set(ControlMode.PercentOutput, OI.getY(Hand.kLeft));
     else
       wristMotor.set(ControlMode.PercentOutput, 0.0);
-    
-    if(OI.getBumper(Hand.kRight))
-      beltMotor.set(ControlMode.PercentOutput, 0.3);
-    else
-      beltMotor.set(ControlMode.PercentOutput, -0.3);
-    }
-
+  }
   
   @Override
   public void initDefaultCommand() {

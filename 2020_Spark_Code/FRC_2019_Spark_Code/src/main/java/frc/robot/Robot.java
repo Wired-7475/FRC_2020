@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
 import java.net.SecureCacheResponse;
@@ -43,8 +36,8 @@ public class Robot extends TimedRobot {
   public static Drivetrain drivetrain;
   public static AHRS navX;
   public static Autonomus auto;
-  public static Encoder leftReelEncoder = new Encoder(0, 1, false , EncodingType.k4X);
-  public static Encoder rightReelEncoder = new Encoder(2,3,false, EncodingType.k4X);
+  public static Encoder leftEncoder = new Encoder(0, 1, false , EncodingType.k4X);
+  public static Encoder rightEncoder = new Encoder(2,3,false, EncodingType.k4X);
 
   public static UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
   Command drive;
@@ -66,20 +59,21 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     drivetrain = new Drivetrain();
     navX = new AHRS(I2C.Port.kMXP);
-
-    auto = new Autonomus();
    
-    leftReelEncoder.setDistancePerPulse(0.0006);
-    leftReelEncoder.setMaxPeriod(0.1);
-    leftReelEncoder.setMinRate(1);
-    leftReelEncoder.setSamplesToAverage(7);
-    leftReelEncoder.setReverseDirection(true);
+    leftEncoder.setDistancePerPulse(1.0 / 2042.0);
+    leftEncoder.setMaxPeriod(0.1);
+    leftEncoder.setMinRate(5);
+    leftEncoder.setSamplesToAverage(4);
+    leftEncoder.setReverseDirection(false);
   
-    rightReelEncoder.setDistancePerPulse(0.0006);
-    rightReelEncoder.setMaxPeriod(0.1);
-    rightReelEncoder.setMinRate(0.5);
-    rightReelEncoder.setSamplesToAverage(7);
-    rightReelEncoder.setReverseDirection(false);
+    rightEncoder.setDistancePerPulse(1.0 / 2042.0);
+    rightEncoder.setMaxPeriod(0.1);
+    rightEncoder.setMinRate(5);
+    rightEncoder.setSamplesToAverage(4);
+    rightEncoder.setReverseDirection(false);
+
+    
+    auto = new Autonomus(leftEncoder, rightEncoder, navX);
 
     visionTab = Shuffleboard.getTab("Vision");
     table = NetworkTableInstance.getDefault().getTable("GRIP/myBlobsReport");
@@ -94,17 +88,21 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-
+    
   }
 
   @Override
   public void autonomousPeriodic() {
-    if(cvSink.grabFrame(imgSource) != 0)
+    /*if(cvSink.grabFrame(imgSource) != 0)
       ballCam.process(imgSource);
     camX = table.getEntry("x").getDoubleArray(defaultNum);
     camY = table.getEntry("y").getDoubleArray(defaultNum);
     camSize = table.getEntry("area").getDoubleArray(defaultNum);
     outputStream.putFrame(ballCam.maskOutput());
+    */
+    auto.straight(10);
+    auto.straight(-10);
+    //auto.turn(90);
 
   }
 
@@ -130,6 +128,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    leftReelEncoder.reset();
+    leftEncoder.reset();
+    rightEncoder.reset();
   }
 }

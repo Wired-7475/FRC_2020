@@ -21,29 +21,29 @@ public class Drivetrain extends Subsystem {
     leftMotor1.configLimitSwitchDisableNeutralOnLOS(true, 10);
     leftMotor1.configPeakOutputForward(0.75);
     leftMotor1.configPeakOutputReverse(-0.75);
-    leftMotor1.configOpenloopRamp(0.2);
+    leftMotor1.configOpenloopRamp(0.4);
     
     leftMotor2 = new VictorSPX(RobotMap.LEFT_DRIVE2);
     leftMotor2.configLimitSwitchDisableNeutralOnLOS(true, 10);
     leftMotor2.configPeakOutputForward(0.75);
     leftMotor2.configPeakOutputReverse(-0.75);
-    leftMotor2.configOpenloopRamp(0.2);
+    leftMotor2.configOpenloopRamp(0.4);
 
     rightMotor1 = new VictorSPX(RobotMap.RIGHT_DRIVE1);
     rightMotor1.configLimitSwitchDisableNeutralOnLOS(true, 10);
     rightMotor1.configPeakOutputForward(0.75);
     rightMotor1.configPeakOutputReverse(-0.75);
-    rightMotor1.configOpenloopRamp(0.2);
+    rightMotor1.configOpenloopRamp(0.4);
 
     rightMotor2 = new VictorSPX(RobotMap.RIGHT_DRIVE2);
     rightMotor2.configLimitSwitchDisableNeutralOnLOS(true, 10);
     rightMotor2.configPeakOutputForward(0.75);
     rightMotor2.configPeakOutputReverse(-0.75);
-    rightMotor2.configOpenloopRamp(0.2);
+    rightMotor2.configOpenloopRamp(0.4);
   }
 
-  public void drive(double x, double y, double throttle, boolean trig) {
-    joystickDrive.joyDrive(x, y, throttle, trig, leftMotor1, rightMotor1);
+  public void drive(double x, double y, boolean trig) {
+    joystickDrive.joyDrive(x, y, trig, leftMotor1, rightMotor1);
     leftMotor2.follow(leftMotor1);
     rightMotor2.follow(rightMotor1);
   }

@@ -14,6 +14,7 @@ import frc.robot.RobotMap;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.commands.ShooterCommand;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class Ballshooter extends Subsystem {
   /**
@@ -21,24 +22,44 @@ public class Ballshooter extends Subsystem {
    */
 
   private TalonSRX shooterMotor;
+  private double delay = 0;
+  private boolean running = false;
 
   public Ballshooter() {
     shooterMotor = new TalonSRX(RobotMap.BALL_MOTOR);
     shooterMotor.configLimitSwitchDisableNeutralOnLOS(true, 10);
-    shooterMotor.configPeakOutputForward(0.75);
-    shooterMotor.configPeakOutputReverse(0.0);
+    shooterMotor.configPeakOutputForward(1.0);
+    shooterMotor.configPeakOutputReverse(-0.75);
     
   }
 
-  public void shoot() {
-    if(OI.getXButton()) {
-      shooterMotor.set(ControlMode.PercentOutput, 0.75);
-     // Robot.intake.enableBelt();
-    } else {
-      shooterMotor.set(ControlMode.PercentOutput, 0.0);
-    //  Robot.intake.disableBelt();
-    }
+  public void disableShooter() {
+    shooterMotor.set(ControlMode.PercentOutput, 0.0);
   }
+
+  public void enableShooter() {
+    shooterMotor.set(ControlMode.PercentOutput, 0.75);
+  }
+
+  public void enableSlowShooter() {
+    shooterMotor.set(ControlMode.PercentOutput, 0.75);
+  }
+
+  public void reverseShooter() {
+    shooterMotor.set(ControlMode.PercentOutput, -0.5);
+  }
+
+  public void setSpeed(double speed) {
+    shooterMotor.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void shoot() {
+     
+  if(OI.getXButton()) {
+    enableShooter();
+  } else
+    disableShooter();
+}
 
   @Override
   public void initDefaultCommand() {
