@@ -42,8 +42,8 @@ public class Drivetrain extends Subsystem {
     rightMotor2.configOpenloopRamp(0.4);
   }
 
-  public void drive(double x, double y, boolean trig) {
-    joystickDrive.joyDrive(x, y, trig, leftMotor1, rightMotor1);
+  public void drive(double x, double y, boolean trig1, boolean trig2) {
+    joystickDrive.joyDrive(x, y, trig1, trig2, leftMotor1, rightMotor1);
     leftMotor2.follow(leftMotor1);
     rightMotor2.follow(rightMotor1);
   }

@@ -5,9 +5,14 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class joystickDrive {
     static String quadrant = "None";
-    public static void joyDrive(double xAxis, double yAxis, boolean trig, VictorSPX victor1, VictorSPX victor2) {
+    public static void joyDrive(double xAxis, double yAxis, boolean trig1, boolean trig2, VictorSPX victor1, VictorSPX victor2) {
 
-   if(!trig){ 
+   if(trig2) {
+      yAxis /= 6;
+      xAxis /= 6;
+   } else if(trig1) { 
+
+   } else {
       xAxis /= 4;
       yAxis /= 4;
    }

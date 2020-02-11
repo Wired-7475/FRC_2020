@@ -16,7 +16,7 @@ public class Tankdrive extends Command {
 
   @Override
   protected void execute() {
-   Robot.drivetrain.drive(Math.abs(OI.drive.getX(Hand.kRight)) < OI.deadzone ? 0.0 : OI.drive.getX(Hand.kRight), Math.abs(OI.drive.getY(Hand.kLeft)) < OI.deadzone ? 0.0 : OI.drive.getY(Hand.kLeft), OI.drive.getBumper(Hand.kRight));
+   Robot.drivetrain.drive(Math.abs(OI.drive.getX(Hand.kRight)) < OI.deadzone ? 0.0 : OI.drive.getX(Hand.kRight), Math.abs(OI.drive.getY(Hand.kLeft)) < OI.deadzone ? 0.0 : OI.drive.getY(Hand.kLeft), OI.drive.getBumper(Hand.kRight), OI.drive.getBumper(Hand.kLeft));
   }
 
   @Override
