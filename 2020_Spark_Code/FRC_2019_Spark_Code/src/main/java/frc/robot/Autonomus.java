@@ -13,41 +13,77 @@ public class Autonomus{
 
    PIDController leftpid;
    PIDController rightpid;
+   PIDController anglepid;
 
    Encoder leftEncoder;
    Encoder rightEncoder;
    AHRS navX;
    
-   public Autonomus(Encoder leftEnc, Encoder rightEnc, AHRS gyro){
-      leftpid = new PIDController(0.5,0,0);
-      leftpid.setTolerance(0.5, 0.5);
-      leftpid.setIntegratorRange(-0.25, 0.25);
+   public final static int FWD = 0;
+   public final static int TURN = 1;
 
-      rightpid = new PIDController(0.5,0,0);
+   int steps[][];
+   int stepcount = 0;
+   public Autonomus(Encoder leftEnc, Encoder rightEnc, AHRS gyro, int[][] init_steps){
+      leftpid = new PIDController(1.0,0.5,1.0);
+      leftpid.setTolerance(0.5, 0.5);
+
+      rightpid = new PIDController(1.0,0.5,1.0);
       rightpid.setTolerance(0.5, 0.5);
-      rightpid.setIntegratorRange(-0.25, 0.25);
+
+      anglepid = new PIDController(0.5, 0.0, 0.0);
 
       leftEncoder = leftEnc;
       rightEncoder = rightEnc;
       navX = gyro;
+
+      steps = init_steps;
    }
 
-  public void straight(int target) {
-   do {
-      Robot.drivetrain.setLeftdrive(leftpid.calculate(leftEncoder.getDistance(), target));
-      Robot.drivetrain.setRightdrive(rightpid.calculate(rightEncoder.getRate(), leftEncoder.getRate()));
-   } while(leftpid.atSetpoint() == false || OI.joy.getTrigger() == false);
-   Robot.drivetrain.setLeftdrive(0.0);
-   Robot.drivetrain.setRightdrive(0.0);
+  public boolean straight(int target) {
+
+      leftpid.setTolerance(0.5);
+      rightpid.setTolerance(0.5);
+      leftpid.setPID(0.3, 0.0, 0.0);
+      rightpid.setPID(0.3, 0.0, 0.0);
+
+      Robot.drivetrain.setLeftdrive(leftpid.calculate(leftEncoder.getRate(), 3.0) * (anglepid.calculate(navX.getAngle(), 0) / 100));
+      Robot.drivetrain.setRightdrive(-rightpid.calculate(rightEncoder.getRate(), 3.0) * (anglepid.calculate(navX.getAngle(), 0) / 100));
+
+   return leftEncoder.getDistance() == target && rightEncoder.getDistance() == target;
+   
   }
 
-  public void turn(int target) {
-   do {
-      Robot.drivetrain.setLeftdrive(leftpid.calculate(navX.getAngle(), target));
-      Robot.drivetrain.setRightdrive(rightpid.calculate(rightEncoder.getRate(), -leftEncoder.getRate()));
-   } while(leftpid.atSetpoint() == false || OI.joy.getTrigger() == false);
-      Robot.drivetrain.setLeftdrive(0.0);
-      Robot.drivetrain.setRightdrive(0.0);
+  public boolean turn(int target) {
+
+      leftpid.setTolerance(2.0);
+      leftpid.setPID(0.1, 0.0, 0.0);
+      double speed = leftpid.calculate(navX.getAngle(), target) / 5;
+      Robot.drivetrain.setLeftdrive(speed);
+      Robot.drivetrain.setRightdrive(speed);
+   return leftpid.atSetpoint();
   }
 
+  public void drive() {
+     boolean isFinished = false;
+     //System.out.println(stepcount +  " : " + steps[stepcount][0] + " : " + steps[stepcount][1]);
+   if(stepcount < steps.length) {
+     switch(steps[stepcount][0]) {
+      case FWD:
+         isFinished = straight(steps[stepcount][1]);
+         break;
+      case TURN:
+         isFinished = turn(steps[stepcount][1]);
+         break;
+      default:
+
+    }
+   }
+    if(isFinished)
+      stepcount++;
+  }
+
+  public void reset() {
+     stepcount = 0;
+  }
 }

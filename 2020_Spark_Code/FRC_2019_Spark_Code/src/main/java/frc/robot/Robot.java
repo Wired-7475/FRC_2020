@@ -70,10 +70,13 @@ public class Robot extends TimedRobot {
     rightEncoder.setMaxPeriod(0.1);
     rightEncoder.setMinRate(5);
     rightEncoder.setSamplesToAverage(4);
-    rightEncoder.setReverseDirection(false);
+    rightEncoder.setReverseDirection(true);
 
-    
-    auto = new Autonomus(leftEncoder, rightEncoder, navX);
+    int[][] steps = 
+    {{Autonomus.TURN, 0},
+    {Autonomus.FWD, 10}}
+    ;
+    auto = new Autonomus(leftEncoder, rightEncoder, navX, steps);
 
     visionTab = Shuffleboard.getTab("Vision");
     table = NetworkTableInstance.getDefault().getTable("GRIP/myBlobsReport");
@@ -89,10 +92,14 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     
+    //auto.straight(-10);
   }
 
   @Override
   public void autonomousPeriodic() {
+
+
+
     /*if(cvSink.grabFrame(imgSource) != 0)
       ballCam.process(imgSource);
     camX = table.getEntry("x").getDoubleArray(defaultNum);
@@ -100,10 +107,8 @@ public class Robot extends TimedRobot {
     camSize = table.getEntry("area").getDoubleArray(defaultNum);
     outputStream.putFrame(ballCam.maskOutput());
     */
-    auto.straight(10);
-    auto.straight(-10);
-    //auto.turn(90);
 
+    auto.drive();
   }
 
   @Override
@@ -128,7 +133,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    leftEncoder.reset();
+   leftEncoder.reset();
     rightEncoder.reset();
+    auto.reset();
   }
 }
