@@ -36,8 +36,8 @@ public class Lift extends Subsystem {
   }
 
   public void enableLift() {
-    liftMotor1.set(ControlMode.PercentOutput, 0.66);
-    liftMotor2.set(ControlMode.PercentOutput, 0.66);
+    liftMotor1.set(ControlMode.PercentOutput, -1.0);
+    liftMotor2.set(ControlMode.PercentOutput, -1.0);
   }
 
   public void disableLift() {
@@ -48,7 +48,8 @@ public class Lift extends Subsystem {
   public void runLift() {
     if(OI.getYButton()) {
       enableLift();
-    }
+    } else
+      disableLift();
     
     reelMotor.set(ControlMode.PercentOutput, -OI.getY(Hand.kRight));
     
