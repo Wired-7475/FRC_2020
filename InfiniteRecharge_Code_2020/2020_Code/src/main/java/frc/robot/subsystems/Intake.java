@@ -84,6 +84,14 @@ public class Intake extends Subsystem {
     else
       disableBelt();    
 
+    if(OI.getXButton()) {
+      shootergateMotor1.set(ControlMode.PercentOutput, -1.0);
+      shootergateMotor2.set(ControlMode.PercentOutput, 1.0);
+    } else {
+      shootergateMotor1.set(ControlMode.PercentOutput, 0.0);
+      shootergateMotor2.set(ControlMode.PercentOutput, 0.0);
+    }
+
     if(Math.abs(OI.getY(Hand.kLeft)) >= 0.1)
       wristMotor.set(ControlMode.PercentOutput, OI.getY(Hand.kLeft));
     else
