@@ -25,6 +25,8 @@ public class Intake extends Subsystem {
   TalonSRX intakeMotor;
   TalonSRX wristMotor;
   TalonSRX beltMotor;
+  VictorSPX shootergateMotor1;
+  VictorSPX shootergateMotor2;
   Hand handL;
 
   public Intake() {
@@ -40,6 +42,11 @@ public class Intake extends Subsystem {
     wristMotor.configOpenloopRamp(0.2);
 
     beltMotor = new TalonSRX(RobotMap.BELT_MOTOR);
+    beltMotor.configLimitSwitchDisableNeutralOnLOS(true, 10);
+    beltMotor.configPeakOutputForward(1.0);
+    beltMotor.configPeakOutputReverse(-1.0);
+
+    sh = new TalonSRX(RobotMap.BELT_MOTOR);
     beltMotor.configLimitSwitchDisableNeutralOnLOS(true, 10);
     beltMotor.configPeakOutputForward(1.0);
     beltMotor.configPeakOutputReverse(-1.0);
