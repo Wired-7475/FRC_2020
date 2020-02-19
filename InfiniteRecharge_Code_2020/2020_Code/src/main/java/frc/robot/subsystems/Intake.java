@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.RobotMap;
 import frc.robot.Robot;
 import frc.robot.OI;
@@ -46,11 +47,15 @@ public class Intake extends Subsystem {
     beltMotor.configPeakOutputForward(1.0);
     beltMotor.configPeakOutputReverse(-1.0);
 
-    sh = new TalonSRX(RobotMap.BELT_MOTOR);
-    beltMotor.configLimitSwitchDisableNeutralOnLOS(true, 10);
-    beltMotor.configPeakOutputForward(1.0);
-    beltMotor.configPeakOutputReverse(-1.0);
+    shootergateMotor1 = new VictorSPX(RobotMap.WHEEL_GATE1);
+    shootergateMotor1.configLimitSwitchDisableNeutralOnLOS(true, 10);
+    shootergateMotor1.configPeakOutputForward(1.0);
+    shootergateMotor1.configPeakOutputReverse(-1.0);
 
+    shootergateMotor2 = new VictorSPX(RobotMap.WHEEL_GATE2);
+    shootergateMotor2.configLimitSwitchDisableNeutralOnLOS(true, 10);
+    shootergateMotor2.configPeakOutputForward(1.0);
+    shootergateMotor2.configPeakOutputReverse(-1.0);
     }
 
   public void enableBelt() {

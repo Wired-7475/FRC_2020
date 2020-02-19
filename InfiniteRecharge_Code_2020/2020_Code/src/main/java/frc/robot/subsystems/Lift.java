@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.RobotMap;
 import frc.robot.commands.LiftCommand;
 import frc.robot.Robot;
@@ -12,59 +13,43 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class Lift extends Subsystem {
 
-  private TalonSRX liftMotor;
+  private TalonSRX liftMotor1;
+  private TalonSRX liftMotor2;
   private TalonSRX reelMotor;
-  private PIDController reelpid;
+
   public Lift() {
-    liftMotor = new TalonSRX(RobotMap.REEL_MOTOR);
-    liftMotor.configLimitSwitchDisableNeutralOnLOS(true, 10);
-    liftMotor.configPeakOutputForward(1.0);
-    liftMotor.configPeakOutputReverse(-1.0);
+    liftMotor1 = new TalonSRX(RobotMap.REEL_MOTOR1);
+    liftMotor1.configLimitSwitchDisableNeutralOnLOS(true, 10);
+    liftMotor1.configPeakOutputForward(1.0);
+    liftMotor1.configPeakOutputReverse(-1.0);
+
+    liftMotor2 = new TalonSRX(RobotMap.REEL_MOTOR2);
+    liftMotor2.configLimitSwitchDisableNeutralOnLOS(true, 10);
+    liftMotor2.configPeakOutputForward(1.0);
+    liftMotor2.configPeakOutputReverse(-1.0);
 
     reelMotor = new TalonSRX(RobotMap.HOOK_MOTOR);
     reelMotor.configLimitSwitchDisableNeutralOnLOS(true, 10);
     reelMotor.configPeakOutputForward(0.8);
     reelMotor.configPeakOutputReverse(-0.8);
 
-    reelpid = new PIDController(0.5,0,0);
-    reelpid.setTolerance(0.5, 0.5);
-    reelpid.setIntegratorRange(-0.1, 0.1);
   }
 
   public void enableLift() {
-    liftMotor.set(ControlMode.PercentOutput, 0.66);
-  }
-
-  public void holdLift(double pos) {
-    double speed = reelpid.calculate(Robot.reelEncoder.getDistance());
-    liftMotor.set(ControlMode.PercentOutput, speed, pos);
-  }
-
-  public void reverseLift() {
-    liftMotor.set(ControlMode.PercentOutput, -0.2);
-  }
-  public void dropLift() {
-    double speed = reelpid.calculate(Robot.reelEncoder.getRate());
-    liftMotor.set(ControlMode.PercentOutput, reelpid.calculate(speed, -0.5));
+    liftMotor1.set(ControlMode.PercentOutput, 0.66);
+    liftMotor2.set(ControlMode.PercentOutput, 0.66);
   }
 
   public void disableLift() {
-    liftMotor.set(ControlMode.PercentOutput, 0.0);
+    liftMotor1.set(ControlMode.PercentOutput, 0.0);
+    liftMotor2.set(ControlMode.PercentOutput, 0.0);
   }
 
   public void runLift() {
-    if(OI.getAButton()) {
+    if(OI.getYButton()) {
       enableLift();
-      reelMotor.set(ControlMode.PercentOutput, -1.0);
-    } else if(OI.getYButton()) {
-      reverseLift();
-      reelMotor.set(ControlMode.PercentOutput, 1.0);
-    } else{
-      holdLift(Robot.reelEncoder.getDistance());
-      reelMotor.set(ControlMode.PercentOutput, 0.0);
     }
-
-    if(OI.xbox.getStickButton(Hand.kRight))
+    
     reelMotor.set(ControlMode.PercentOutput, -OI.getY(Hand.kRight));
     
     
