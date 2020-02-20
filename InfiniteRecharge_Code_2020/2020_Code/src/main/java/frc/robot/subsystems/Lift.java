@@ -36,8 +36,8 @@ public class Lift extends Subsystem {
   }
 
   public void enableLift() {
-    liftMotor1.set(ControlMode.PercentOutput, -1.0);
-    liftMotor2.set(ControlMode.PercentOutput, -1.0);
+    liftMotor1.set(ControlMode.PercentOutput, -0.7);
+    liftMotor2.set(ControlMode.PercentOutput, -0.7);
   }
 
   public void disableLift() {
