@@ -21,17 +21,30 @@ public class Autonomus{
    
    public final static int FWD = 0;
    public final static int TURN = 1;
+   public final static int SHOOT_ON = 2;
+   public final static int SHOOT_OFF = 3;
+   public final static int BAR_ON = 4;
+   public final static int BAR_OFF = 5;
+   public final static int WRIST_ON = 7;
+   public final static int WRIST_OFF = 8;
+   public final static int DELAY = 9;
+   public final static int INTAKE_ON = 10;
+   public final static int INTAKE_OFF = 11;
+   double init_time = -1;
+   boolean prev_result = false;
+   boolean result = false;
 
    int steps[][];
    int stepcount = 0;
    public Autonomus(Encoder leftEnc, Encoder rightEnc, AHRS gyro, int[][] init_steps){
-      leftpid = new PIDController(1.0,0.5,1.0);
+      leftpid = new PIDController(0.50,0.5,1.0);
       leftpid.setTolerance(0.5, 0.5);
 
-      rightpid = new PIDController(1.0,0.5,1.0);
+      rightpid = new PIDController(0.50,0.5,1.0);
       rightpid.setTolerance(0.5, 0.5);
 
-      anglepid = new PIDController(0.5, 0.0, 0.0);
+      anglepid = new PIDController(0.057, 0.0, 0.0);
+      anglepid.enableContinuousInput(-180, 180);
 
       leftEncoder = leftEnc;
       rightEncoder = rightEnc;
@@ -41,46 +54,129 @@ public class Autonomus{
    }
 
   public boolean straight(int target) {
+   prev_result = result;
+      leftpid.setTolerance(0.1);
+      rightpid.setTolerance(0.1);
 
-      leftpid.setTolerance(0.5);
-      rightpid.setTolerance(0.5);
-      leftpid.setPID(0.3, 0.0, 0.0);
-      rightpid.setPID(0.3, 0.0, 0.0);
+      double leftdrive = 0;
+      double rightdrive = 0;
+      leftdrive = (leftpid.calculate(leftEncoder.getDistance(), target));
+     rightdrive = (-rightpid.calculate(rightEncoder.getDistance(), target));
 
-      Robot.drivetrain.setLeftdrive(leftpid.calculate(leftEncoder.getRate(), 3.0) * (anglepid.calculate(navX.getAngle(), 0) / 100));
-      Robot.drivetrain.setRightdrive(-rightpid.calculate(rightEncoder.getRate(), 3.0) * (anglepid.calculate(navX.getAngle(), 0) / 100));
+     if(leftdrive > 0.5) 
+         leftdrive = 0.5;
 
-   return leftEncoder.getDistance() == target && rightEncoder.getDistance() == target;
+      if(leftdrive < -0.5)
+         leftdrive = -0.5;
+
+      if(rightdrive > 0.5) 
+         rightdrive = 0.5;
+
+      if(rightdrive < -0.5)
+         rightdrive = -0.5;
+
+      result =  leftpid.atSetpoint() && rightpid.atSetpoint();
+      Robot.drivetrain.setLeftdrive(leftdrive);
+      Robot.drivetrain.setRightdrive(rightdrive);
+   return prev_result && result;
    
   }
 
-  public boolean turn(int target) {
+  public boolean straight2(int target) {
 
-      leftpid.setTolerance(2.0);
-      leftpid.setPID(0.1, 0.0, 0.0);
-      double speed = leftpid.calculate(navX.getAngle(), target) / 5;
-      Robot.drivetrain.setLeftdrive(speed);
-      Robot.drivetrain.setRightdrive(speed);
+   leftpid.setPID(0.5, 0.0, 0.0);
+
+   double linear_speed = leftpid.calculate(leftEncoder.getDistance(), target);
+   double angular_error;
+   if(Math.abs(rightEncoder.getDistance()) < 0.05)
+      angular_error = 1;
+   else
+      angular_error = leftEncoder.getDistance() / rightEncoder.getDistance();
+
+   Robot.drivetrain.setLeftdrive(linear_speed * angular_error / 1.5);
+   Robot.drivetrain.setRightdrive(linear_speed * -angular_error / 1.5);
+
    return leftpid.atSetpoint();
+
   }
 
+  public boolean turn(int target) {
+      anglepid.setTolerance(1.0);
+
+      double speed = anglepid.calculate(navX.getAngle(), target);
+
+   if(speed > 0.5) 
+      speed = 0.5;
+
+   if(speed < -0.5)
+      speed = -0.5;
+
+      Robot.drivetrain.setLeftdrive(speed);
+      Robot.drivetrain.setRightdrive(speed);
+      result = anglepid.atSetpoint();
+   return result && delay(3);
+  }
+  
+  public boolean delay(double delay) {
+     boolean ontarget = false;
+     double current_time = Robot.timer.get();
+
+     if(init_time == -1)
+      init_time = Robot.timer.get();
+
+      if(init_time + delay < current_time) {
+         init_time = -1;
+         ontarget = true;
+      }
+     return ontarget;
+  }
   public void drive() {
      boolean isFinished = false;
      //System.out.println(stepcount +  " : " + steps[stepcount][0] + " : " + steps[stepcount][1]);
    if(stepcount < steps.length) {
      switch(steps[stepcount][0]) {
       case FWD:
-         isFinished = straight(steps[stepcount][1]);
+         isFinished = straight2(steps[stepcount][1]);
          break;
       case TURN:
          isFinished = turn(steps[stepcount][1]);
+         break;
+      case SHOOT_ON:
+         isFinished = true;
+         break;
+      case SHOOT_OFF:
+         isFinished = true;
+         break;
+      case BAR_ON:
+         isFinished = true;
+         break;
+      case BAR_OFF:
+         isFinished = true;
+         break;
+      case WRIST_ON:
+         isFinished = true;
+         break;
+      case WRIST_OFF:
+         isFinished = true;
+         break;
+      case DELAY:
+         isFinished = delay(steps[stepcount][1]);
+         break;
+      case INTAKE_ON:
+         isFinished = true;
+         break;
+      case INTAKE_OFF:
+         isFinished = true;
          break;
       default:
 
     }
    }
-    if(isFinished)
+    if(isFinished) {
       stepcount++;
+      leftEncoder.reset();
+      rightEncoder.reset();
+    }
   }
 
   public void reset() {

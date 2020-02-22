@@ -20,9 +20,11 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -44,7 +46,9 @@ public class Robot extends TimedRobot {
   AnalogInput dio0 = new AnalogInput(0);
 
   ShuffleboardTab visionTab;
+  ShuffleboardTab autoTab;
   NetworkTable table;
+  NetworkTableEntry automode;
   static double[] camX;
   static double[] camY;
   static double[] camSize;
@@ -54,7 +58,7 @@ public class Robot extends TimedRobot {
   CvSource cvSource;
   Mat imgSource;
   CvSource outputStream;
-
+  static Timer timer;
   @Override
   public void robotInit() {
     drivetrain = new Drivetrain();
@@ -72,9 +76,19 @@ public class Robot extends TimedRobot {
     rightEncoder.setSamplesToAverage(4);
     rightEncoder.setReverseDirection(true);
 
+  
+
     int[][] steps = 
-    {{Autonomus.TURN, 0},
-    {Autonomus.FWD, 10}}
+    {{Autonomus.FWD, 5},
+    {Autonomus.DELAY, 5},
+    {Autonomus.TURN, -90},
+    {Autonomus.FWD, 4},
+    {Autonomus.TURN, 180},
+    {Autonomus.FWD, -2},
+    {Autonomus.TURN, 180},
+    {Autonomus.FWD, 6}
+  
+  }
     ;
     auto = new Autonomus(leftEncoder, rightEncoder, navX, steps);
 
@@ -84,6 +98,9 @@ public class Robot extends TimedRobot {
     cvSink = CameraServer.getInstance().getVideo();
     imgSource = new Mat();
     outputStream = CameraServer.getInstance().putVideo("Mask", 640, 480);
+
+    timer = new Timer();
+    timer.start();
   }
   @Override
   public void robotPeriodic() {
@@ -93,12 +110,16 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     
     //auto.straight(-10);
+    leftEncoder.reset();
+    rightEncoder.reset();
+    navX.reset();
+    auto.reset();
   }
 
   @Override
   public void autonomousPeriodic() {
 
-
+    auto.drive();
 
     /*if(cvSink.grabFrame(imgSource) != 0)
       ballCam.process(imgSource);
@@ -108,7 +129,6 @@ public class Robot extends TimedRobot {
     outputStream.putFrame(ballCam.maskOutput());
     */
 
-    auto.drive();
   }
 
   @Override

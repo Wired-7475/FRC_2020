@@ -38,7 +38,8 @@ public class Robot extends TimedRobot {
   NetworkTableEntry leftEncoderData;
   NetworkTableEntry rightEncoderData;
   public static Timer timer;
-  public static UsbCamera camera;
+  public static UsbCamera camera1;
+  public static UsbCamera camera2;
 
   @Override
   public void robotInit() {
@@ -48,7 +49,8 @@ public class Robot extends TimedRobot {
     lift = new Lift();
     wheel = new WheelSpinner();
 
-    camera = CameraServer.getInstance().startAutomaticCapture();
+    camera1 = CameraServer.getInstance().startAutomaticCapture(0);
+    camera2 = CameraServer.getInstance().startAutomaticCapture(1);
 
     navX = new AHRS(I2C.Port.kMXP);
 
