@@ -70,11 +70,37 @@ public class Intake extends Subsystem {
     beltMotor.set(ControlMode.PercentOutput, 0.0);
   }
 
+  public void enableBar() {
+    intakeMotor.set(ControlMode.PercentOutput, 0.4);
+  }
+
+  public void disableBar() {
+    intakeMotor.set(ControlMode.PercentOutput, 0.0);
+  }
+
+  public void enableWrist() {
+    wristMotor.set(ControlMode.PercentOutput, 0.5);
+  }
+
+  public void disableWrist() {
+    wristMotor.set(ControlMode.PercentOutput, 0.0);
+  }
+
+  public void enableGate() {
+    shootergateMotor1.set(ControlMode.PercentOutput, -1.0);
+    shootergateMotor2.set(ControlMode.PercentOutput, 1.0);
+  }
+
+  public void disableGate() {
+    shootergateMotor1.set(ControlMode.PercentOutput, 0.0);
+    shootergateMotor2.set(ControlMode.PercentOutput, 0.0);
+  }
+
   public void ballIntake() {
     if(OI.getBButton()) {
-      intakeMotor.set(ControlMode.PercentOutput, 0.4);
+      enableBar();
     } else {
-      intakeMotor.set(ControlMode.PercentOutput, 0.0);
+      disableBar();
     }
 
     if(OI.getBumper(Hand.kLeft))
@@ -85,11 +111,9 @@ public class Intake extends Subsystem {
       disableBelt();    
 
     if(OI.getTrigger(Hand.kRight) > 0.1) {
-      shootergateMotor1.set(ControlMode.PercentOutput, -1.0);
-      shootergateMotor2.set(ControlMode.PercentOutput, 1.0);
+      enableGate();
     } else {
-      shootergateMotor1.set(ControlMode.PercentOutput, 0.0);
-      shootergateMotor2.set(ControlMode.PercentOutput, 0.0);
+      disableGate();
     }
 
     if(Math.abs(OI.getY(Hand.kLeft)) >= 0.1)

@@ -80,16 +80,13 @@ public class Robot extends TimedRobot {
 
     int[][] steps = 
     {{Autonomus.FWD, 5},
-    {Autonomus.DELAY, 5},
     {Autonomus.TURN, -90},
-    {Autonomus.FWD, 4},
+    {Autonomus.FWD, 1},
+    {Autonomus.TURN, 90},
+    {Autonomus.FWD, 2},
+    {Autonomus.DELAY, 5},
     {Autonomus.TURN, 180},
-    {Autonomus.FWD, -2},
-    {Autonomus.TURN, 180},
-    {Autonomus.FWD, 6}
-  
-  }
-    ;
+    {Autonomus.FWD, 6}};
     auto = new Autonomus(leftEncoder, rightEncoder, navX, steps);
 
     visionTab = Shuffleboard.getTab("Vision");

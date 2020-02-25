@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.OI;
 import frc.robot.Robot;
-
 import com.kauailabs.navx.frc.AHRS;
 
 public class Autonomus{
@@ -43,7 +42,8 @@ public class Autonomus{
       rightpid = new PIDController(0.50,0.5,1.0);
       rightpid.setTolerance(0.5, 0.5);
 
-      anglepid = new PIDController(0.057, 0.0, 0.0);
+      //anglepid = new PIDController(0.057, 0.0, 0.0);
+      anglepid = new PIDController(0.03, 0.01, 0.0);
       anglepid.enableContinuousInput(-180, 180);
 
       leftEncoder = leftEnc;
@@ -88,10 +88,11 @@ public class Autonomus{
 
    double linear_speed = leftpid.calculate(leftEncoder.getDistance(), target);
    double angular_error;
-   if(Math.abs(rightEncoder.getDistance()) < 0.05)
+   if(Math.abs(rightEncoder.getDistance()) < 0.1)
       angular_error = 1;
    else
       angular_error = leftEncoder.getDistance() / rightEncoder.getDistance();
+
 
    Robot.drivetrain.setLeftdrive(linear_speed * angular_error / 1.5);
    Robot.drivetrain.setRightdrive(linear_speed * -angular_error / 1.5);
@@ -130,6 +131,45 @@ public class Autonomus{
       }
      return ontarget;
   }
+
+  public void bar(boolean state) {
+   /*  
+   if(state)
+         Robot.intake.enableBar();
+      else
+         Robot.intake.disableBar();
+    */
+  }
+
+  public void intake(boolean state) {
+        /*  
+   if(state)
+         Robot.intake.enableGate();
+         Robot.intake.enableBelt();
+      else
+         Robot.intake.disableGate();
+         Robot.intake.disableBelt();
+    */
+  }
+
+  public void shooter(boolean state) {
+        /*  
+   if(state)
+         Robot.intake.enableShooter();
+      else
+         Robot.intake.disableShooter();
+    */
+  }
+
+  public void wrist(boolean state) {
+        /*  
+   if(state)
+         Robot.intake.enableWrist();
+      else
+         Robot.intake.disableWrist();
+    */
+  }
+
   public void drive() {
      boolean isFinished = false;
      //System.out.println(stepcount +  " : " + steps[stepcount][0] + " : " + steps[stepcount][1]);
@@ -142,30 +182,38 @@ public class Autonomus{
          isFinished = turn(steps[stepcount][1]);
          break;
       case SHOOT_ON:
+         shooter(true);
          isFinished = true;
          break;
       case SHOOT_OFF:
+         shooter(false);
          isFinished = true;
          break;
       case BAR_ON:
+      bar(true);
          isFinished = true;
          break;
       case BAR_OFF:
+      bar(false);
          isFinished = true;
          break;
       case WRIST_ON:
+         wrist(true);
          isFinished = true;
          break;
       case WRIST_OFF:
+         wrist(false);
          isFinished = true;
          break;
       case DELAY:
          isFinished = delay(steps[stepcount][1]);
          break;
       case INTAKE_ON:
+         intake(true);
          isFinished = true;
          break;
       case INTAKE_OFF:
+         intake(false);
          isFinished = true;
          break;
       default:
