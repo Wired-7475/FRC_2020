@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
+import frc.robot.Autonomus;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -40,6 +41,7 @@ public class Robot extends TimedRobot {
   public static Timer timer;
   public static UsbCamera camera1;
   public static UsbCamera camera2;
+  public static Autonomus auto;
 
   @Override
   public void robotInit() {
@@ -86,6 +88,22 @@ public class Robot extends TimedRobot {
     timer = new Timer();
     timer.start();
 
+    int[][] steps = 
+    {{Autonomus.WRIST_ON, 0},
+    {Autonomus.DELAY, 1},
+    {Autonomus.WRIST_OFF, 0},
+    {Autonomus.FWD, 1},
+    {Autonomus.SHOOT_ON, 0},
+    {Autonomus.DELAY, 3},
+    {Autonomus.SHOOT_OFF, 0},
+    {Autonomus.TURN, 90},
+    {Autonomus.FWD, 3},
+    {Autonomus.TURN, 0},
+    {Autonomus.BAR_ON, 0},
+    {Autonomus.FWD, 3},
+    {Autonomus.BAR_OFF, 0}
+  };
+    auto = new Autonomus(leftEncoder, rightEncoder, navX, steps);
    }
 
   @Override
