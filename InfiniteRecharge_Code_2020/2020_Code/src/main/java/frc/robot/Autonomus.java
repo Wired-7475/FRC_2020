@@ -43,7 +43,7 @@ public class Autonomus{
       rightpid.setTolerance(0.5, 0.5);
 
       //anglepid = new PIDController(0.057, 0.0, 0.0);
-      anglepid = new PIDController(0.03, 0.01, 0.0);
+      anglepid = new PIDController(0.01, 0.0, 0.0);
       anglepid.enableContinuousInput(-180, 180);
 
       leftEncoder = leftEnc;
@@ -112,8 +112,8 @@ public class Autonomus{
    if(speed < -0.5)
       speed = -0.5;
 
-      Robot.drivetrain.setLeftdrive(speed);
-      Robot.drivetrain.setRightdrive(speed);
+      Robot.drivetrain.setLeftdrive(speed/2);
+      Robot.drivetrain.setRightdrive(speed/2);
       result = anglepid.atSetpoint();
    return result && delay(3);
   }
@@ -172,7 +172,7 @@ public class Autonomus{
 
   public void drive() {
      boolean isFinished = false;
-     //System.out.println(stepcount +  " : " + steps[stepcount][0] + " : " + steps[stepcount][1]);
+   
    if(stepcount < steps.length) {
      switch(steps[stepcount][0]) {
       case FWD:

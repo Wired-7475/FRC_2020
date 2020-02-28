@@ -92,16 +92,20 @@ public class Robot extends TimedRobot {
     {{Autonomus.WRIST_ON, 0},
     {Autonomus.DELAY, 1},
     {Autonomus.WRIST_OFF, 0},
-    {Autonomus.FWD, 1},
+    {Autonomus.FWD, -3},
     {Autonomus.SHOOT_ON, 0},
+    {Autonomus.FWD, 3},
     {Autonomus.DELAY, 3},
+    {Autonomus.INTAKE_ON, 0},
+    {Autonomus.DELAY, 5},
     {Autonomus.SHOOT_OFF, 0},
+    {Autonomus.INTAKE_OFF, 0}/* ,
     {Autonomus.TURN, 90},
     {Autonomus.FWD, 3},
     {Autonomus.TURN, 0},
     {Autonomus.BAR_ON, 0},
     {Autonomus.FWD, 3},
-    {Autonomus.BAR_OFF, 0}
+    {Autonomus.BAR_OFF, 0*/
   };
     auto = new Autonomus(leftEncoder, rightEncoder, navX, steps);
    }
@@ -116,12 +120,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-  
-    leftEncoderData.setDouble(leftEncoder.getDistance());
-    rightEncoderData.setDouble(rightEncoder.get());
-   // pidA.setDouble(testpid.calculate(leftEncoder.getRate(), 10));
-    
-    shooter.setSpeed(testpid.calculate(leftEncoder.getDistance(), 10));
+    auto.drive();
   }
 
   @Override
@@ -141,6 +140,7 @@ public class Robot extends TimedRobot {
     rightEncoder.reset();
     testpid.reset();
     timer.reset();
+    auto.reset();
   }
 
   @Override
