@@ -172,7 +172,7 @@ public class Autonomus{
 
   public void drive() {
      boolean isFinished = false;
-   
+
    if(stepcount < steps.length) {
      switch(steps[stepcount][0]) {
       case FWD:
@@ -224,6 +224,8 @@ public class Autonomus{
       stepcount++;
       leftEncoder.reset();
       rightEncoder.reset();
+      Robot.drivetrain.setLeftdrive(0.0);
+      Robot.drivetrain.setRightdrive(0.0);
     }
   }
 
