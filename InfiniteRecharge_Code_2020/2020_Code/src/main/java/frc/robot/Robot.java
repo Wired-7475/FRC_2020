@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
     {Autonomus.WRIST_OFF, 0},
     {Autonomus.FWD, -3},
     {Autonomus.SHOOT_ON, 0},
-    {Autonomus.FWD, 3},
+    {Autonomus.FWD, 1},
     {Autonomus.DELAY, 3},
     {Autonomus.INTAKE_ON, 0},
     {Autonomus.DELAY, 5},

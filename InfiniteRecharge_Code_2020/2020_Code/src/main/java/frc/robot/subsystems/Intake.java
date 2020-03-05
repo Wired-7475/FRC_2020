@@ -71,7 +71,7 @@ public class Intake extends Subsystem {
   }
 
   public void enableBar() {
-    intakeMotor.set(ControlMode.PercentOutput, 0.4);
+    intakeMotor.set(ControlMode.PercentOutput, 0.6);
   }
 
   public void disableBar() {
@@ -98,6 +98,8 @@ public class Intake extends Subsystem {
 
   public void ballIntake() {
     if(OI.getBButton()) {
+      shootergateMotor1.set(ControlMode.PercentOutput, 0.2);
+      shootergateMotor2.set(ControlMode.PercentOutput, -0.2);
       enableBar();
     } else {
       disableBar();
@@ -112,6 +114,9 @@ public class Intake extends Subsystem {
 
     if(OI.getTrigger(Hand.kRight) > 0.1) {
       enableGate();
+    } else if(OI.getBButton()) {
+      shootergateMotor1.set(ControlMode.PercentOutput, 0.2);
+      shootergateMotor2.set(ControlMode.PercentOutput, -0.2);
     } else {
       disableGate();
     }

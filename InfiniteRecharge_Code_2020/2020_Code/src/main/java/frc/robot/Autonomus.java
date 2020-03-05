@@ -82,7 +82,7 @@ public class Autonomus{
    
   }
 
-  public boolean straight2(int target) {
+  public boolean straight2(double target) {
 
    leftpid.setPID(0.5, 0.0, 0.0);
 
@@ -101,7 +101,7 @@ public class Autonomus{
 
   }
 
-  public boolean turn(int target) {
+  public boolean turn(double target) {
       anglepid.setTolerance(1.0);
 
       double speed = anglepid.calculate(navX.getAngle(), target);
